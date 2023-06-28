@@ -1,10 +1,8 @@
-import axios from 'axios';
-
 import { BallTriangle } from 'react-loader-spinner';
-import { options } from 'helpers/options';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { fetchSearch } from 'helpers/fetch-api';
 
 const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,15 +17,10 @@ const Movies = () => {
   useEffect(() => {
     if (filmName === '') return;
     setLoading(true);
-    axios
-      .get(
-        `https://api.themoviedb.org/3/search/movie?query=${filmName}`,
-        options
-      )
-      .then(resp => {
-        setLoading(false);
-        return setFilms(resp.data.results);
-      });
+    fetchSearch(filmName).then(resp => {
+      setLoading(false);
+      return setFilms(resp.results);
+    });
   }, [filmName]);
 
   const formSubmitHandler = event => {
@@ -48,16 +41,7 @@ const Movies = () => {
       </form>
       <ul>
         {loading ? (
-          <BallTriangle
-            height={100}
-            width={100}
-            radius={5}
-            color="#4fa94d"
-            ariaLabel="ball-triangle-loading"
-            wrapperClass={{}}
-            wrapperStyle=""
-            visible={true}
-          />
+          <BallTriangle />
         ) : (
           films.length !== 0 &&
           films.map(({ id, title }) => (

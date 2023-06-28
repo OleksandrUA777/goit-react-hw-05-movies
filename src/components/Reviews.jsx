@@ -1,9 +1,8 @@
-import axios from 'axios';
-import { options } from 'helpers/options';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BallTriangle } from 'react-loader-spinner';
+import { fetchReviews } from 'helpers/fetch-api';
 
 const Reviews = () => {
   const { movieId } = useParams();
@@ -13,12 +12,10 @@ const Reviews = () => {
   // console.log(reviews);
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`https:api.themoviedb.org/3/movie/${movieId}/reviews`, options)
-      .then(resp => {
-        setLoading(false);
-        return setReviews(resp.data.results);
-      });
+    fetchReviews(movieId).then(resp => {
+      setLoading(false);
+      return setReviews(resp.results);
+    });
   }, [movieId]);
   return (
     <>

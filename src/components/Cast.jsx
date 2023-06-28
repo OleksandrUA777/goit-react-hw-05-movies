@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { options } from 'helpers/options';
+import { fetchCast } from 'helpers/fetch-api';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { BallTriangle } from 'react-loader-spinner';
@@ -14,13 +13,10 @@ const Cast = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, options)
-      .then(resp => resp.data)
-      .then(data => {
-        setLoading(false);
-        return setCast(data.cast);
-      });
+    fetchCast(movieId).then(data => {
+      setLoading(false);
+      return setCast(data.cast);
+    });
   }, [movieId]);
   return (
     <ul>

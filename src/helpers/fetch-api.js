@@ -1,22 +1,45 @@
-// import axios from 'axios';
+import axios from 'axios';
 
-// const getTrandingMovies = () => {
-//   const options = {
-//     method: 'GET',
-//     headers: {
-//       accept: 'application/json',
-//       Authorization:
-//         'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzZDFiMjJjZDMxNzc2OGQ3ZmI0YTY5ZTk2ODNkYTM1NyIsInN1YiI6IjYzZTNkMDRmZmFjNTAyMDBmMzMwZDU2NSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bBYUdlTQqiu0VhNNlWMH1wcEwTL9I5EDJUoCwODAJ3I',
-//     },
-//   };
+const { options } = require('./options');
 
-//   return axios
-//     .get(
-//       'https://api.themoviedb.org/3/trending/movie/day?language=en-US',
-//       options
-//     )
-//     .then(response => response.data)
-//     .then(response => response.results)
-//     .catch(err => console.error(err));
-// };
-// export default getTrandingMovies;
+async function fetchTranding() {
+  try {
+    const resp = await axios.get(
+      'https://api.themoviedb.org/3/trending/movie/day?language=en-US',
+      options
+    );
+    return resp.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function fetchSearch(q) {
+  const resp = await axios.get(
+    `https://api.themoviedb.org/3/search/movie?query=${q}`,
+    options
+  );
+  return resp.data;
+}
+async function fetchDetails(movieId) {
+  const resp = await axios.get(
+    `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
+    options
+  );
+  return resp.data;
+}
+
+async function fetchCast(movieId) {
+  const resp = await axios.get(
+    `https://api.themoviedb.org/3/movie/${movieId}/credits`,
+    options
+  );
+  return resp.data;
+}
+async function fetchReviews(movieId) {
+  const resp = await axios.get(
+    `https:api.themoviedb.org/3/movie/${movieId}/reviews`,
+    options
+  );
+  return resp.data;
+}
+export { fetchTranding, fetchSearch, fetchDetails, fetchCast, fetchReviews };

@@ -1,12 +1,10 @@
-import axios from 'axios';
-
 import { BallTriangle } from 'react-loader-spinner';
-import { options } from 'helpers/options';
 import { Suspense, useRef } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { Wrapper } from './MovieDetails.styled';
+import { fetchDetails } from 'helpers/fetch-api';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -21,12 +19,7 @@ const MovieDetails = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
-        options
-      )
-      .then(response => response.data)
+    fetchDetails(movieId)
       .then(data => {
         setLoading(false);
         return setMovieInfo(data);

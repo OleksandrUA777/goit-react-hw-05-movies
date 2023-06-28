@@ -1,30 +1,22 @@
-import axios from 'axios';
 import { BallTriangle } from 'react-loader-spinner';
-import { options } from 'helpers/options';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { fetchTranding } from 'helpers/fetch-api';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const location = useLocation();
+
   //   console.log('location: ', location);
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(
-        'https://api.themoviedb.org/3/trending/movie/day?language=en-US',
-        options
-      )
-      .then(response => response.data)
-      .then(response => {
-        setLoading(false);
-        return setMovies(response.results);
-      })
-      .catch(err => console.error(err));
+    fetchTranding().then(response => {
+      setLoading(false);
+      return setMovies(response.results);
+    });
   }, []);
   //http://localhost:3001/goit-react-hw-05-movies/home
   return (
@@ -32,10 +24,10 @@ const Home = () => {
       {loading ? (
         <BallTriangle />
       ) : (
-        movies?.map(movie => (
-          <li key={movie.id}>
-            <Link to={`movies/${movie.id}`} state={{ from: location }}>
-              {movie.title}
+        movies?.map(({ id, title }) => (
+          <li key={id}>
+            <Link to={`movies/${id}`} state={{ from: location }}>
+              {title}
             </Link>
           </li>
         ))
